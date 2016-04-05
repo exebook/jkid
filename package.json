@@ -1,0 +1,11 @@
+{
+  "main": "./jkid.js",
+  "name": "jkid",
+  "description": "JKID is a human I/O friendly JSON wrapper",
+  "version": "0.0.2",
+  "dependencies": {
+    "elfu": "0.0.x"
+  },
+  "author": "Yakov Nivin",
+  "license": "Public domain(unlicense)"
+}
