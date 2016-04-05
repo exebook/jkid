@@ -2,6 +2,10 @@
 
 this was made for Netiety.
 
+JKid will colorize your JSON, it will optimize output in two ways: by removing quotation marks and by wrapping intelligently.
+
+Fire an issue if you have an issue.
+
 Example usage:
 
 ```js
