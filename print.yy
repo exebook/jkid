@@ -5,48 +5,65 @@ COLOR_NAMES ∆ [0,21,28,200,240,134,130,39]
 COLOR_NAME ∆ 1000
 COLOR_STRING ∆ 202//196
 COLOR_NUMBER ∆ 100
+COLOR_SPACE ∆ 79
 //s ∆ '' ⦙ i ► COLOR_NAMES { s += color(i) + ' ' + i } ⦙ ロ s
 
 ➮ serialize a filter opt {
-	⌥ !opt {opt = {}}
-	// TODO: do not show {} at all!
-	R ∆ []
-	⌥ ⬤ a ≟ 'object' {
-		⌥ a.map {
-			R ⬊ { type:'str', str:'[', color: 250}
-			R ⬊ { type:'in' }
-			i ► a {
-				R = R ꗚ serialize(i)
-				⌥ (i_ != a↥-1) {
-					R ⬊ { type:'str', str:' ', color: 241 }
-				}
-			}
-			R ⬊ { type:'out' }
-			R ⬊ { type:'str', str:']', color: 241 }
+	dup ∆ []
+	$ serial(a, filter, opt)
+	
+	➮ serial a filter opt {
+		⌥ ⬤ a ≟ 'object' && dup ≀ a >= 0 {
+			$ { type:'str', str:'@', color: 250 }
 		}
-		⎇ {
-			//⌥ (opt.hide_object_braces) 
-			R ⬊ { type:'str', str:'{', color: 250 }
-			R ⬊ { type:'in' }
-			K ∆ ⚷a
-			k ► K {
-				R ⬊ { type: 'str', str: k+' ', color: COLOR_NAME }
-				R = R ꗚ serialize(aᵏ)
-				⌥ (k_ != K↥-1) {
-					R ⬊ { type:'str', str:' ', color: 250 }
+		dup ⬊ a
+		⌥ !opt {opt = {}}
+		// TODO: do not show {} at all!
+		R ∆ []
+		⌥ ⬤ a ≟ 'object' {
+			⌥ a.map {
+				R ⬊ { type:'str', str:'[', color: 250}
+				R ⬊ { type:'in' }
+				i ► a {
+					R = R ꗚ serial(i)
+					⌥ (i_ != a↥-1) {
+						R ⬊ { type:'str', str:' ', color: 241 }
+					}
 				}
+				R ⬊ { type:'out' }
+				R ⬊ { type:'str', str:']', color: 241 }
 			}
-			R ⬊ { type:'out' }
-			//⌥ (opt.show_object_braces) 
-			R ⬊ { type:'str', str:'}', color: 246 }
+			⎇ {
+				//⌥ (opt.hide_object_braces) 
+				R ⬊ { type:'str', str:'{', color: 250 }
+				R ⬊ { type:'in' }
+				K ∆ ⚷a
+				k ► K {
+					R ⬊ { type: 'str', str: k+' ', color: COLOR_NAME }
+					R = R ꗚ serial(aᵏ)
+					⌥ (k_ != K↥-1) {
+						R ⬊ { type:'str', str:' ', color: 250 }
+					}
+				}
+				R ⬊ { type:'out' }
+				//⌥ (opt.show_object_braces) 
+				R ⬊ { type:'str', str:'}', color: 246 }
+			}
 		}
+		⥹ ⬤ a ≟ 'string' {
+			⌥ a ≟ ' ' {
+				a = repl(a, ' ', '_')
+				a = repl(a, '\t', '|')
+				R ⬊ { type: 'str', str: '_', color: COLOR_SPACE }
+			}
+			⎇ {
+				R ⬊ { type: 'str', str: a+'', color: COLOR_STRING }
+			}
+			//(bg(224)+ color(210)+a +colorEnd(7)+endbg())
+		}
+		⎇ R ⬊ { type:'str', color: COLOR_NUMBER, str: a+'' }
+		$ R
 	}
-	⥹ ⬤ a ≟ 'string' {
-		R ⬊ { type: 'str', str: a+'', color: COLOR_STRING }
-		//(bg(224)+ color(210)+a +colorEnd(7)+endbg())
-	}
-	⎇ R ⬊ { type:'str', color: COLOR_NUMBER, str: a+'' }
-	$ R
 }
 
 ➮ jkid_print a width {
